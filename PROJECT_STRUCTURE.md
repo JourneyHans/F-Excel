@@ -1,79 +1,234 @@
 # F-Excel 项目结构说明
 
+## 项目概述
+
+F-Excel 是一个模块化的桌面数据处理工具集合，采用Python开发，使用tkinter作为GUI框架。项目采用现代化的软件架构设计，遵循SOLID原则和多种设计模式。
+
 ## 目录结构
 
 ```
 F-Excel/
-├── main.py                 # 主程序入口
-├── run.py                  # 启动脚本
-├── config.py               # 配置文件
-├── requirements.txt        # 依赖包列表
-├── README.md              # 项目说明文档
-├── PROJECT_STRUCTURE.md   # 项目结构说明
-├── start.bat              # Windows启动脚本
-├── start.sh               # Linux/Mac启动脚本
-├── test_id_converter.py   # 测试文件
-├── modules/               # 模块目录
-│   ├── __init__.py        # 模块包初始化
-│   ├── id_converter.py    # ID转换器模块
-│   └── excel_translator.py # Excel翻译器模块
-└── examples/              # 示例文件目录
-    ├── sample_data.txt    # 示例数据文件
-    └── sample_translation_data.txt # 翻译数据示例文件
+├── main.py                          # 主程序入口
+├── config.py                        # 配置文件
+├── requirements.txt                 # 依赖包列表
+├── README.md                        # 项目说明文档
+├── PROJECT_STRUCTURE.md             # 项目结构说明（本文档）
+├── ARCHITECTURE_DESIGN.md           # 架构设计说明
+├── MODULE_DESIGN.md                 # 模块设计说明
+├── PERFORMANCE_OPTIMIZATION.md      # 性能优化说明
+├── modules/                         # 核心模块包
+│   ├── __init__.py                 # 模块包初始化文件
+│   ├── base_module.py              # 基础模块抽象类
+│   ├── data_processors.py          # 数据处理策略类
+│   ├── id_converter.py             # ID值转换器模块
+│   └── excel_translator.py         # Excel翻译器模块
+├── examples/                        # 示例数据文件
+│   ├── sample_data.txt             # 示例数据
+│   └── sample_translation_data.txt # 示例翻译数据
+├── tests/                          # 测试文件目录
+│   ├── test_id_converter.py        # ID转换器测试
+│   ├── test_excel_translator.py    # Excel翻译器测试
+│   └── test_large_file_performance.py # 大文件性能测试
+└── scripts/                        # 脚本文件目录
+    ├── start.bat                   # Windows启动脚本
+    └── start.sh                    # Linux/Mac启动脚本
 ```
 
-## 文件说明
+## 核心文件说明
 
-### 核心文件
-- **main.py**: 主程序文件，包含应用程序的主窗口和模块管理
-- **run.py**: 启动脚本，包含依赖检查和错误处理
-- **config.py**: 配置文件，包含应用程序的各种配置参数
+### 1. 主程序文件
 
-### 模块文件
-- **modules/id_converter.py**: ID转换器模块，实现【id=值】到Excel的转换功能
-- **modules/excel_translator.py**: Excel翻译器模块，实现Excel文件到ID=翻译文本的转换功能
+#### main.py
+- **功能**: 应用程序主入口
+- **设计模式**: 单例模式、工厂模式、观察者模式
+- **主要类**: `FExcelApp`
+- **职责**: 
+  - 创建主界面
+  - 管理功能模块
+  - 处理用户交互
+  - 状态管理
 
-### 启动脚本
-- **start.bat**: Windows系统的批处理启动脚本
-- **start.sh**: Linux/Mac系统的Shell启动脚本
+#### config.py
+- **功能**: 集中配置管理
+- **配置分类**:
+  - 应用程序信息
+  - 窗口配置
+  - 文件配置
+  - 样式配置
+  - 性能配置
+  - 正则表达式模式
+  - 日志配置
+  - 错误处理配置
+  - 国际化配置
+  - 开发配置
 
-### 文档和配置
-- **README.md**: 项目说明和使用指南
-- **requirements.txt**: Python依赖包列表
-- **examples/sample_data.txt**: 示例数据文件
-- **examples/sample_translation_data.txt**: 翻译数据示例文件
+### 2. 模块包 (modules/)
 
-## 技术架构
+#### __init__.py
+- **功能**: 模块包初始化和管理
+- **设计模式**: 工厂模式、注册表模式
+- **主要功能**:
+  - 模块注册表管理
+  - 模块实例创建
+  - 模块信息查询
 
-### 前端界面
-- 使用tkinter作为GUI框架
-- 模块化设计，每个功能独立成模块
-- 响应式布局，支持窗口大小调整
+#### base_module.py
+- **功能**: 基础模块抽象类
+- **设计模式**: 抽象基类模式、模板方法模式
+- **主要功能**:
+  - 定义模块通用接口
+  - 提供通用UI创建方法
+  - 实现通用文件处理功能
+  - 错误处理和状态管理
 
-### 数据处理
-- 使用pandas进行数据处理
-- 使用openpyxl进行Excel文件操作
-- 正则表达式进行文本解析
+#### data_processors.py
+- **功能**: 数据处理策略实现
+- **设计模式**: 策略模式、工厂模式
+- **主要类**:
+  - `DataProcessor`: 抽象处理器基类
+  - `IDValueProcessor`: ID值转换处理器
+  - `ExcelTranslationProcessor`: Excel翻译处理器
+  - `BatchDataProcessor`: 批量数据处理器
+  - `DataProcessorFactory`: 处理器工厂类
 
-### 模块系统
-- 插件式架构，易于扩展新功能
-- 统一的模块接口
-- 独立的模块窗口管理
+#### id_converter.py
+- **功能**: ID值转换器模块
+- **继承关系**: 继承自 `BaseModule`
+- **设计模式**: 继承模式、策略模式
+- **主要功能**:
+  - 将【id=值】格式转换为Excel文件
+  - 支持文件导入导出
+  - 数据预览和验证
 
-## 扩展指南
+#### excel_translator.py
+- **功能**: Excel翻译器模块
+- **继承关系**: 继承自 `BaseModule`
+- **设计模式**: 继承模式、策略模式、观察者模式
+- **主要功能**:
+  - 将Excel文件中的ID、中文、韩文转换为ID=韩文格式
+  - 支持大文件异步处理
+  - 进度更新和取消处理
 
-### 添加新模块
-1. 在`modules/`目录下创建新的模块文件
-2. 实现模块类，继承自基础模块接口
-3. 在`main.py`中注册新模块
-4. 更新模块配置和界面
+### 3. 示例和测试文件
 
-### 修改配置
-- 编辑`config.py`文件中的配置参数
-- 支持运行时配置修改
-- 配置文件热重载
+#### examples/
+- **sample_data.txt**: ID值转换示例数据
+- **sample_translation_data.txt**: Excel翻译示例数据
 
-### 自定义样式
-- 在`config.py`中定义样式参数
-- 支持主题切换
-- 可自定义字体、颜色等
+#### tests/
+- **test_id_converter.py**: ID转换器功能测试
+- **test_excel_translator.py**: Excel翻译器功能测试
+- **test_large_file_performance.py**: 大文件性能测试
+
+## 设计模式应用
+
+### 1. 架构层面
+- **模块化设计模式**: 将功能分解为独立模块
+- **分层架构**: 表现层、业务逻辑层、数据访问层分离
+
+### 2. 模块管理
+- **工厂模式**: 动态创建模块实例
+- **注册表模式**: 管理可用模块信息
+- **单例模式**: 确保应用实例唯一性
+
+### 3. 数据处理
+- **策略模式**: 不同类型数据使用不同处理策略
+- **模板方法模式**: 定义算法骨架，子类实现具体步骤
+- **观察者模式**: 进度更新和状态通知
+
+### 4. 界面设计
+- **组合模式**: UI组件层次结构
+- **命令模式**: 按钮点击事件处理
+- **状态模式**: 界面状态管理
+
+## 技术栈
+
+### 核心框架
+- **Python 3.7+**: 主要开发语言
+- **tkinter**: GUI框架
+- **pandas**: 数据处理库
+- **openpyxl**: Excel文件操作库
+
+### 设计原则
+- **SOLID原则**: 单一职责、开闭原则、里氏替换、接口隔离、依赖倒置
+- **DRY原则**: 不重复自己
+- **KISS原则**: 保持简单
+
+### 代码规范
+- **PEP 8**: Python代码风格指南
+- **类型注解**: 使用typing模块
+- **文档字符串**: 详细的函数和类文档
+- **错误处理**: 完善的异常处理机制
+
+## 扩展性设计
+
+### 1. 模块扩展
+- 新模块只需继承 `BaseModule` 类
+- 实现必要的抽象方法
+- 在 `modules/__init__.py` 中注册
+
+### 2. 处理器扩展
+- 新处理器只需继承 `DataProcessor` 类
+- 实现数据处理逻辑
+- 在 `DataProcessorFactory` 中注册
+
+### 3. 配置扩展
+- 在 `config.py` 中添加新配置项
+- 支持环境变量覆盖
+- 支持配置文件热重载
+
+## 性能优化
+
+### 1. 大文件处理
+- 分块读取和处理
+- 异步处理避免界面冻结
+- 内存使用监控和限制
+
+### 2. 批处理
+- 批量数据处理
+- 进度更新和取消支持
+- 多线程处理
+
+### 3. 缓存机制
+- 文件内容缓存
+- 处理结果缓存
+- 内存使用优化
+
+## 维护和部署
+
+### 1. 日志管理
+- 分级日志记录
+- 日志文件轮转
+- 错误追踪和调试
+
+### 2. 错误处理
+- 用户友好的错误提示
+- 错误日志记录
+- 自动重试机制
+
+### 3. 部署方式
+- 打包为可执行文件
+- 依赖管理
+- 跨平台支持
+
+## 未来发展方向
+
+### 1. 功能扩展
+- 支持更多数据格式
+- 增加数据验证功能
+- 添加数据统计分析
+
+### 2. 性能提升
+- 多进程处理
+- GPU加速计算
+- 分布式处理支持
+
+### 3. 用户体验
+- 现代化UI设计
+- 主题切换功能
+- 快捷键支持
+
+### 4. 集成能力
+- 数据库连接
+- API接口支持
+- 云存储集成
